@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="drum-machine"></div>
+
+    <!-- react and react-dom -->
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+
+    <!-- Babel transpiler -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- freeCodecCamp test cases -->
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+
+    <!-- Your custom script here -->
+    <script src="musicBank.js"></script>
+    <script type="text/babel" src="script.js"></script>
+    <!-- <script type="text/babel" src="demo.js"></script> -->
+    <script>
+      let ParentDiv = document.getElementsByTagName("body");
+      const playItAll = async (e) => {
+        const keyTriggerArray = bankOne.map((i) => i.keyTrigger);
+        const keyCodeArray = bankOne.map((i) => i.keyCode);
+        let myindex = keyTriggerArray.indexOf(e.key.toUpperCase());
+        const audioTag = document.getElementById(e.key.toUpperCase());
+        let isPlaying = false;
+ 
+        if (keyTriggerArray.includes(e.key.toUpperCase())) {
+          audioTag.onplaying = () => {
+            isPlaying = true;
+          };
+          audioTag.onpause = () => {
+            isPlaying = false;
+          };
+          if (audioTag.paused && !isPlaying) {
+            await audioTag.play();
+            document.getElementById("display").innerText =
+              e.key.toUpperCase() + " " + keyCodeArray[myindex];
+            document
+              .getElementById(`drum-pad-${keyCodeArray[myindex]}`)
+              .classList.add("active");
+            audioTag.addEventListener("ended", () => {
+              audioTag.pause();
+              audioTag.currentTime = 0;
+
+              document
+                .getElementById(`drum-pad-${keyCodeArray[myindex]}`)
+                .classList.remove("active");
+            });
+          }
+        }
+      };
+      ParentDiv[0].addEventListener("keypress", playItAll);
+    </script>
+  </body>
+</html>
